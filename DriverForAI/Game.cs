@@ -7,14 +7,28 @@ using System.IO;
 
 namespace DriverForAI
 {
+    /*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	 *
+    *                                                                   	 *
+    * This program should be used for Connect Five Competition.          	 *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	 *
+    * Author: Gleb Zakharov                                              	 *
+    * Email: <last name><first name>i@gmail.com                         	 *
+    * Year: 2015                                                        	 *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+   */
     partial class Game
     {
         private const int centerOfField = 4;
         private const int endOfField = 9;
         private int numberOfGame = 0;
-        private List<bool> wayOpportunities = new List<bool>();
+        private List<bool> freeColumn = new List<bool>();
         private double timeLimit;
-        private int numberOfWay;
+        private int numberOfTurn;
         private GraphicField field;
         public bool end = false;
         public IPlayer winPlayer;
@@ -22,10 +36,10 @@ namespace DriverForAI
         private IPlayer player2;
         public IPlayer Player1 { get { return player1; } }
         public IPlayer Player2 { get { return player2; } }
-        private char lastWay;
-        public char LastWay {
-            get { return lastWay; }
-            set { lastWay = value; }
+        private char lastTurn;
+        public char LastTurn {
+            get { return lastTurn; }
+            set { lastTurn = value; }
         }
 
         public char[,] Field
@@ -47,17 +61,17 @@ namespace DriverForAI
             this.numberOfGame = numberOfGame;
             this.field = field;
             this.timeLimit = timeLimit;
-            numberOfWay = 0;
+            numberOfTurn = 0;
             this.player1 = player1;
             this.player2 = player2;
             for ( int i = 0; i < endOfField + 1; i++ )
-                wayOpportunities.Add(true);
+                freeColumn.Add(true);
         }
 
-        public int NumberOfWay
+        public int NumberOfTurn
         {
-            get {return numberOfWay;}
-            set {numberOfWay = value;}
+            get {return numberOfTurn;}
+            set {numberOfTurn = value;}
         }
 
         public int NumberOfGame
@@ -68,23 +82,23 @@ namespace DriverForAI
         /// <summary>
         /// check whether the row is full
         /// </summary>
-        public List<bool> WayOpportunities
+        public List<bool> FreeColumn
         {
-            get {return wayOpportunities;}
-            set {wayOpportunities = value;}
+            get {return freeColumn;}
+            set {freeColumn = value;}
         }
 
         ///<summary>
         /// check whether the turn is right
         /// </summary> 
-        private bool checkWay(char symbol, string way)
+        private bool checkTurn(char symbol, string turn)
         {
-            if ( way == null )
+            if ( turn == null )
                 return false;
             string nums = "0123456789";
-            if ( (way.Length != 1) || (!nums.Contains(way[0])) )
+            if ( (turn.Length != 1) || (!nums.Contains(turn[0])) )
                 return false;
-            if ( !WayOpportunities[int.Parse(way)] )
+            if ( !FreeColumn[int.Parse(turn)] )
                 return false;
             return true;
         }
@@ -92,11 +106,11 @@ namespace DriverForAI
         /// <summary>
         /// check whether the turn is last and the player has won. 
         /// </summary>
-        /// <param name="numberOfWay">It's unnecessary var</param>
+        /// <param name="numberOfTurn">It's unnecessary var</param>
         //TODO: Delete numberOfWay
         /// <param name="symbol">the symbol that is being checked</param>
         /// <returns></returns>
-        public bool checkWin(int numberOfWay, char symbol)
+        public bool checkWin(int numberOfTurn, char symbol)
         {
             if ( checkTheHorizontalLine(symbol) )
                 return true;
@@ -167,17 +181,17 @@ namespace DriverForAI
             else
                 substr = "OOOOO";
 
-            for (int i = 5; i >= 0; i-- ) {
+            for (int i = centerOfField + 1; i >= 0; i-- ) {
                 string str = "";
-                for (int j = 0; i + j < 10; j++ )
+                for (int j = 0; i + j < endOfField + 1; j++ )
                     str += Field[i + j, j];    
                 if ( str.Contains(substr) )
                     return true;
             }
 
-            for ( int i = 1; i < 5; i++ ) {
+            for ( int i = 1; i < centerOfField + 1; i++ ) {
                 string str = "";
-                for (int j = 0; j + i < 10; j++ )
+                for (int j = 0; j + i < endOfField + 1; j++ )
                     str += Field[j, i + j];
                 if ( str.Contains(substr) )
                     return true;
@@ -200,15 +214,15 @@ namespace DriverForAI
             else
                 substr = "OOOOO";
 
-            for ( int i = 14; i >= 9; i-- ) {
+            for ( int i = endOfField + centerOfField + 1; i >= endOfField; i-- ) {
                 string str = "";
-                for ( int j = i - 9; j <= 9 ; j++ )
+                for ( int j = i - endOfField; j <= endOfField ; j++ )
                     str += Field[j, i - j];
                 if ( str.Contains(substr) )
                     return true;
             }
 
-            for ( int i = 8; i >= 5; i-- ) {
+            for ( int i = endOfField - 1; i >= centerOfField + 1; i-- ) {
                 string str = "";
                 for ( int j = 0; i - j >= 0; j++ )
                     str += Field[j, i - j];
@@ -228,32 +242,32 @@ namespace DriverForAI
         /// </summary>
         /// <param name="player1">The player who does the turn</param>
         /// <param name="player2">The opposite player</param>
-        public void PlayerWay(IPlayer player1, IPlayer player2)
+        public void PlayerTurn(IPlayer player1, IPlayer player2)
         {
             if ( player1.Symbol == 'X' ) {
-                NumberOfWay++;
-                LastWay = 'X';
+                NumberOfTurn++;
+                LastTurn = 'X';
             } else
-                LastWay = 'O';
-            string wway = player1.ReadWay(NumberOfWay, player1.Symbol);
-            if ( checkWay(player1.Symbol, wway)) {
+                LastTurn = 'O';
+            string wway = player1.ReadTurn(NumberOfTurn, player1.Symbol);
+            if ( checkTurn(player1.Symbol, wway)) {
                 int i = int.Parse(wway);
                 Field = new GraphicField(this, player1.Symbol, i).Field;
-                player2.WriteWay(NumberOfWay, player1.Symbol, i, NumberOfGame);
+                player2.WriteTurn(NumberOfTurn, player1.Symbol, i, NumberOfGame);
 
                 var pl = player1 as RandomPlayer;
                 if (pl != null )
-                    player1.WriteWay(NumberOfWay, player1.Symbol, i, NumberOfGame);
+                    player1.WriteTurn(NumberOfTurn, player1.Symbol, i, NumberOfGame);
 
                 if ( field.Field[endOfField, i] != '.' ) {
-                    WayOpportunities[i] = false;
+                    FreeColumn[i] = false;
                 }
 
-                if ( checkWin(NumberOfWay, player1.Symbol) )
+                if ( checkWin(NumberOfTurn, player1.Symbol) )
                     GameOver(player1);
-                if ( checkWin(NumberOfWay, player2.Symbol) ) 
+                if ( checkWin(NumberOfTurn, player2.Symbol) ) 
                     GameOver(player2);
-                LastWay = player1.Symbol;
+                LastTurn = player1.Symbol;
 
             } else {
                 GameOver(player2);
@@ -279,7 +293,7 @@ namespace DriverForAI
         public bool AllDraw()
         {
             int j = 0;
-            foreach ( bool b in WayOpportunities )
+            foreach ( bool b in FreeColumn )
                 if ( !b ) j++;
             if ( j == endOfField + 1 )
                 return true;

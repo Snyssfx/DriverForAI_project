@@ -6,13 +6,27 @@ using System.Threading.Tasks;
 
 namespace DriverForAI
 {
+    /*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	 *
+    *                                                                   	 *
+    * This program should be used for Connect Five Competition.          	 *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	 *
+    * Author: Gleb Zakharov                                              	 *
+    * Email: <last name><first name>i@gmail.com                         	 *
+    * Year: 2015                                                        	 *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+   */
     /// <summary>
     /// interface for players
     /// </summary>
     interface IPlayer
     {
-        string ReadWay(int numberOfWay, char Symbol);
-        void WriteWay(int numberOfWay, char Symbol, int Way, int NumberOfGame);
+        string ReadTurn(int numberOfWay, char Symbol);
+        void WriteTurn(int numberOfWay, char Symbol, int Way, int NumberOfGame);
         int NumberOfWins { get; set; }
         int NumberOfDraws { get; set; }
         int NumberOfLoses { get; set; }

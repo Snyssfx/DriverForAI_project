@@ -7,10 +7,24 @@ using System.IO;
 
 namespace DriverForAI
 {
+    /*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	 *
+    *                                                                   	 *
+    * This program should be used for Connect Five Competition.          	 *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	 *
+    * Author: Gleb Zakharov                                              	 *
+    * Email: <last name><first name>i@gmail.com                         	 *
+    * Year: 2015                                                        	 *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+   */
     class GraphicField
     {
-        //TODO: change digits to constants
         public const int cellNums = 10;
+        public const int centerOfField = cellNums / 2;
         private char[,] field = new char[10, 10];
         public char[,] Field
         {
@@ -39,16 +53,16 @@ namespace DriverForAI
                     string pathh = Program.Path + @"\" + g.NumberOfGame + '\\' + 'X' + '\\' +
                         symbol + (j1) + ".txt";
                     using ( var reader = new StreamReader(pathh) ) {
-                        int way = int.Parse(reader.ReadToEnd());
+                        int turn = int.Parse(reader.ReadToEnd());
                         for ( int j = cellNums - 1; j > 0; j-- ) {
-                            if ( (way != 4) && (way != 5) || (j != 1) ) {
-                                Field[j, way] = Field[j - 1, way];
+                            if ( (turn != centerOfField - 1) && (turn != centerOfField) || (j != 1) ) {
+                                Field[j, turn] = Field[j - 1, turn];
                             }
                         }
-                        if ( (way == 4) || (way == 5) )
-                            Field[1, way] = symbol;
+                        if ( (turn == centerOfField - 1) || (turn == centerOfField) )
+                            Field[1, turn] = symbol;
                         else
-                            Field[0, way] = symbol;
+                            Field[0, turn] = symbol;
                     }
                 }
             }
@@ -59,18 +73,18 @@ namespace DriverForAI
             generateNewField();
         }
 
-        public GraphicField(Game g, char symbol, int way)
+        public GraphicField(Game g, char symbol, int turn)
         {
             Field = g.Field;
             for ( int j = cellNums - 1; j > 0; j-- ) {
-                if ( (way != 4) && (way != 5) || (j != 1) ) {
-                    Field[j, way] = Field[j - 1, way];
+                if ( (turn != centerOfField - 1) && (turn != centerOfField) || (j != 1) ) {
+                    Field[j, turn] = Field[j - 1, turn];
                 }
             }
-            if ( (way == 4) || (way == 5) )
-                Field[1, way] = symbol;
+            if ( (turn == centerOfField - 1) || (turn == centerOfField) )
+                Field[1, turn] = symbol;
             else
-                Field[0, way] = symbol;
+                Field[0, turn] = symbol;
         }
 
         private void generateNewField()

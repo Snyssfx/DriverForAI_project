@@ -7,6 +7,20 @@ using System.IO;
 
 namespace DriverForAI
 {
+    /*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	 *
+    *                                                                   	 *
+    * This program should be used for Connect Five Competition.          	 *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	 *
+    * Author: Gleb Zakharov                                              	 *
+    * Email: <last name><first name>i@gmail.com                         	 *
+    * Year: 2015                                                        	 *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+   */
     /// <summary>
     /// Bot with a random turn's choice
     /// </summary>
@@ -18,7 +32,7 @@ namespace DriverForAI
         private int numberOfDraws;
         private int numberOfLoses;
         private string path;
-        private List<bool> wayOpportunities;
+        private List<bool> freeColumns;
         private double timeLimit;
         public RandomPlayer(string path, string name, char symbol)
         {
@@ -78,7 +92,7 @@ namespace DriverForAI
         /// <param name="numberOfWay">it needs for proving interface contract</param>
         /// <param name="Symbol">it needs only for proving interface contract</param>
         /// <returns></returns>
-        public String ReadWay(Int32 numberOfWay, Char Symbol)
+        public String ReadTurn(Int32 numberOfWay, Char Symbol)
         {
             Random ran = new Random();
             int i = ran.Next(0, 10);
@@ -92,7 +106,7 @@ namespace DriverForAI
         /// <param name="Symbol"></param>
         /// <param name="Way"></param>
         /// <param name="NumberOfGame"></param>
-        public void WriteWay(Int32 numberOfWay, Char Symbol, int Way, int NumberOfGame)
+        public void WriteTurn(Int32 numberOfWay, Char Symbol, int Way, int NumberOfGame)
         {
             string name = "\\" + Symbol.ToString() + numberOfWay.ToString();
             using ( StreamWriter writer = new StreamWriter(Program.Path + '\\' + NumberOfGame + @"\" +

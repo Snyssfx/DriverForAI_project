@@ -1,0 +1,4 @@
+Random\Bot_David
+C:\Example\DriverForAI\DriverForAI\bin\Debug\Brain\Brain
+TimeLimit = 100
+TimeLimit = 5,0

@@ -7,28 +7,22 @@ using System.IO;
 
 namespace DriverForAI
 {
-    //Arguments that brains' writers receive for their AI:
-    //Session directory, symbol, timeLimit.
-    //For example:
-    //C:\Example\Game_5\O\ X 4,875
+    /*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	 *
+    *                                                                   	 *
+    * This program should be used for Connect Five Competition.          	 *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	 *
+    * Author: Gleb Zakharov                                              	 *
+    * Email: <last name><first name>i@gmail.com                         	 *
+    * Year: 2015                                                        	 *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+   */
 
-    //Before the contest you need to write this in Config.txt:
-    //Player 1's folder, player 2's (absolute path to a player 2 folder) on a new line and so on.
-    //Players' names are names of the .exe file.
-    //On new lines timeLimits for all of the players.
 
-    //If you want to add a random AI, write Random\some_random_name
-    //as a new player.
-
-    //For example:
-
-    //C:\Example\Super_Hero
-    //C:\Example\Potential_Winner
-    //Random\Bot_David
-    //TimeLimit = 4,875
-    //TimeLimit = 5,0
-    //TimeLimit = 1000
-    
     static class Program
     { 
         private static Int32 numOfGames;

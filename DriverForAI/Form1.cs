@@ -12,6 +12,20 @@ using System.IO;
 
 namespace DriverForAI
 {
+    /*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	 *
+    *                                                                   	 *
+    * This program should be used for Connect Five Competition.          	 *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	 *
+    * Author: Gleb Zakharov                                              	 *
+    * Email: <last name><first name>i@gmail.com                         	 *
+    * Year: 2015                                                        	 *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+   */
     public partial class Form1 : Form
     {
         public static Int32 currentGame = 0;
@@ -27,13 +41,14 @@ namespace DriverForAI
         List<TrackBar> historyBar;
         List<Label> winLab;
         List<Label> statLab;
-        List<Label> nowWay;
+        List<Label> nowTurn;
         List<Button> replayButton;
         TabControl.TabPageCollection gameTabs;
         Game game;
         List<Label> results = new List<Label>();
         List<GraphicField> previousField;
         public const int cellNums = 10;
+        public const int centerOfNums = cellNums / 2;
         public const int cellSize = 18;
         public const int fieldSize = 220;
         public const int fullCellSize = fieldSize / cellNums;
@@ -133,27 +148,27 @@ namespace DriverForAI
 
 
             while ( (!game.end) && (!game.AllDraw()) ) {
-                game.PlayerWay(game.Player1, game.Player2);
+                game.PlayerTurn(game.Player1, game.Player2);
                 Thread.Sleep(threadWay);
                 DrawField(i, graphic[i]);
-                historyBar[i].Maximum = (game.NumberOfWay) * 2 - 1;
-                scrollStep = game.NumberOfWay;
-                statLab[i].Text = "Moves' count: " + game.NumberOfWay + "\n" + "The last movement: " +
+                historyBar[i].Maximum = (game.NumberOfTurn) * 2 - 1;
+                scrollStep = game.NumberOfTurn;
+                statLab[i].Text = "Moves' count: " + game.NumberOfTurn + "\n" + "The last movement: " +
                    game.Player1.Symbol + '\n';
-                nowWay[i].Text = "Current movement: " + scrollStep;
+                nowTurn[i].Text = "Current movement: " + scrollStep;
                 RefreshItAll(i);
                 Application.DoEvents();
                 Thread.Sleep(100);
 
                 if ( (!game.end) && (!game.AllDraw()) ) {
-                    game.PlayerWay(game.Player2, game.Player1);
+                    game.PlayerTurn(game.Player2, game.Player1);
                     Thread.Sleep(threadWay);
                     DrawField(i, graphic[i]);
-                    historyBar[i].Maximum = game.NumberOfWay * 2;
-                    scrollStep = game.NumberOfWay;
-                    statLab[i].Text = "Moves' count: " + game.NumberOfWay + "\n" + "The last movement: " +
+                    historyBar[i].Maximum = game.NumberOfTurn * 2;
+                    scrollStep = game.NumberOfTurn;
+                    statLab[i].Text = "Moves' count: " + game.NumberOfTurn + "\n" + "The last movement: " +
                        game.Player2.Symbol + '\n';
-                    nowWay[i].Text = "Current movement: " + scrollStep;
+                    nowTurn[i].Text = "Current movement: " + scrollStep;
                     RefreshItAll(i);
                     Application.DoEvents();
                     Thread.Sleep(100);
@@ -248,7 +263,7 @@ namespace DriverForAI
             historyBar = new List<TrackBar>();
             winLab = new List<Label>();
             statLab = new List<Label>();
-            nowWay = new List<Label>();
+            nowTurn = new List<Label>();
             replayButton = new List<Button>();
             gameTabs = new TabControl.TabPageCollection(mainTab);
             graphic = new List<Graphics>();
@@ -285,11 +300,11 @@ namespace DriverForAI
 
             statLab.Add(new Label());
             statLab[i].Font = new Font("Microsoft Sans Serif", 12);
-            nowWay.Add(new Label());
-            nowWay[i].Font = statLab[i].Font;
+            nowTurn.Add(new Label());
+            nowTurn[i].Font = statLab[i].Font;
             statLab[i].Location = new Point(341, 60);
-            nowWay[i].Location = new Point(341, 170);
-            nowWay[i].AutoSize = true;
+            nowTurn[i].Location = new Point(341, 170);
+            nowTurn[i].AutoSize = true;
 
             fieldBox.Add(new PictureBox());
             fieldBox[i].Size = new Size(221, 221);
@@ -310,7 +325,7 @@ namespace DriverForAI
             gameTabs[i].Controls.Add(headerLab[i]);
             gameTabs[i].Controls.Add(winLab[i]);
             gameTabs[i].Controls.Add(statLab[i]);
-            gameTabs[i].Controls.Add(nowWay[i]);
+            gameTabs[i].Controls.Add(nowTurn[i]);
             gameTabs[i].Controls.Add(fieldBox[i]);
             gameTabs[i].Controls.Add(historyBar[i]);
             gameTabs[i].Controls.Add(replayButton[i]);
@@ -338,9 +353,9 @@ namespace DriverForAI
                         fullCellSize, fullCellSize);
                 }
             pen = new Pen(Color.Gray);
-            graphic.DrawRectangle(pen, 4 * fullCellSize + 1, 9 * fullCellSize + 1,
+            graphic.DrawRectangle(pen, (centerOfNums - 1) * fullCellSize + 1, (cellNums - 1) * fullCellSize + 1,
                  fullCellSize - 2, fullCellSize - 2);
-            graphic.DrawRectangle(pen, 5 * fullCellSize + 1, 9 * fullCellSize + 1,
+            graphic.DrawRectangle(pen, (centerOfNums) * fullCellSize + 1, (cellNums - 1) * fullCellSize + 1,
                 fullCellSize - 2, fullCellSize - 2);
             fieldBox.Refresh();
         }
@@ -358,22 +373,22 @@ namespace DriverForAI
                 for(int j = 0; j < cellNums; j++ ) {
                     switch ( game.Field[i, j] ) {
                         case '.':
-                            g.DrawRectangle(new Pen(Color.White), (j) * fullCellSize + 2, 
+                            g.DrawRectangle(new Pen(Color.White), j * fullCellSize + 2, 
                                 (cellNums - 1 - i) * fullCellSize + 2, cellSize, cellSize);
                             break;
                         case 'X':
                             g.DrawImage(new Bitmap(new Bitmap(
                                Program.Path + @"\X.jpg"), cellSize, cellSize),
-                                (j) * fullCellSize + 2, (cellNums - 1 - i) * fullCellSize + 2);
+                                j * fullCellSize + 2, (cellNums - 1 - i) * fullCellSize + 2);
                             break;
                         case 'O':
                             g.DrawImage(new Bitmap(new Bitmap(
                                 Program.Path + @"\O.jpg"), cellSize, cellSize),
-                                (j) * fullCellSize + 2, (cellNums - 1 - i) * fullCellSize + 2);
+                                j * fullCellSize + 2, (cellNums - 1 - i) * fullCellSize + 2);
                             break;
                         case '#':
                             g.FillRectangle(new SolidBrush(Color.Gray),
-                                new Rectangle((j) * fullCellSize + 1, (cellNums - 1 - i) * fullCellSize + 1,
+                                new Rectangle(j * fullCellSize + 1, (cellNums - 1 - i) * fullCellSize + 1,
                                 cellSize + 2, cellSize + 2));
                             break;
                      }
@@ -397,17 +412,17 @@ namespace DriverForAI
                             case 'X':
                                 g.DrawImage(new Bitmap(new Bitmap(
                                    Program.Path + @"\X.jpg"),
-                                    cellSize, cellSize), (j) * fullCellSize + 2,
+                                    cellSize, cellSize), j * fullCellSize + 2,
                                     (cellNums - 1 - i) * fullCellSize + 2);
                                 break;
                             case 'O':
                                 g.DrawImage(new Bitmap(new Bitmap(
                                    Program.Path + @"\O.jpg"), 
-                                    cellSize, cellSize), (j) * fullCellSize + 2,
+                                    cellSize, cellSize), j * fullCellSize + 2,
                                     (cellNums - 1 - i) * fullCellSize + 2);
                                 break;
                             case '.':
-                                g.FillRectangle(new SolidBrush(Color.White), (j) * fullCellSize + 2,
+                                g.FillRectangle(new SolidBrush(Color.White), j * fullCellSize + 2,
                                     (cellNums - 1 - i) * fullCellSize + 2, cellSize, cellSize);
                                 break;
                         }
@@ -432,7 +447,7 @@ namespace DriverForAI
             replayButton[i].Refresh();
             gameTabs[i].Refresh();
             mainTab.Refresh();
-            nowWay[i].Refresh();
+            nowTurn[i].Refresh();
         }
 
         /// <summary>
@@ -450,8 +465,8 @@ namespace DriverForAI
                 scrollStep2 = scrollStep / 2;
             else
                 scrollStep2 = scrollStep / 2 + 1;
-            nowWay[currentIndex].Text = "Current movement: " + scrollStep2;
-            nowWay[currentIndex].Refresh();
+            nowTurn[currentIndex].Text = "Current movement: " + scrollStep2;
+            nowTurn[currentIndex].Refresh();
             previousScrollStep[currentIndex] = scrollStep;
             var field = new GraphicField(scrollStep, Program.g[currentIndex]);
             DrawField(currentIndex, graphic[currentIndex], field);
@@ -475,8 +490,8 @@ namespace DriverForAI
                 else
                     scrollStep2 = i / 2 + 1;
                 historyBar[currentIndex].Value = i;
-                nowWay[currentIndex].Text = "Current movement: " + scrollStep2; 
-                nowWay[currentIndex].Refresh();
+                nowTurn[currentIndex].Text = "Current movement: " + scrollStep2; 
+                nowTurn[currentIndex].Refresh();
                 previousScrollStep[currentIndex] = i;
                 var field = new GraphicField(i, Program.g[currentIndex]);
                 DrawField(currentIndex, graphic[currentIndex], field);
