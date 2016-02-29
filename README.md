@@ -5,6 +5,7 @@ Driver for AI ("Connect Five" game).
 This program shoud be used for Connect Five Competition. Connect Five is the game like Connect Four; for more information http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html
 
 Author: Gleb Zakharov.
+For starting a competition, you have to add to a custom folder .exe file, X and O .jpg and Configs.txt
 
     Arguments that brains' writers receive for their AI:
     Session directory, symbol, timeLimit.
