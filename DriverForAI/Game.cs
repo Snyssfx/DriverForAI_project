@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+    **************************************************************************
+    * Judge for AI ("Connect Five" game).                               	   *
+    *                                                                   	   *
+    * This program should be used for Connect Five Competition.          	   *
+    * Connect Five is the game like Connect Four; for more information see   *
+    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+    *                                                                   	   *
+    * Author: Gleb Zakharov                                              	   *
+    * Email: <last name><first name>i@gmail.com                         	   *
+    * Year: 2015                                                        	   *
+    * See the LICENSE.txt file in the project root for more information.     *
+    **************************************************************************
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,20 +22,6 @@ using System.IO;
 
 namespace DriverForAI
 {
-    /*
-    **************************************************************************
-    * Judge for AI ("Connect Five" game).                               	 *
-    *                                                                   	 *
-    * This program should be used for Connect Five Competition.          	 *
-    * Connect Five is the game like Connect Four; for more information see   *
-    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
-    *                                                                   	 *
-    * Author: Gleb Zakharov                                              	 *
-    * Email: <last name><first name>i@gmail.com                         	 *
-    * Year: 2015                                                        	 *
-    * See the LICENSE.txt file in the project root for more information.     *
-    **************************************************************************
-   */
     partial class Game
     {
         private const int centerOfField = 4;
@@ -107,7 +108,7 @@ namespace DriverForAI
         /// check whether the turn is last and the player has won. 
         /// </summary>
         /// <param name="numberOfTurn">It's unnecessary var</param>
-        //TODO: Delete numberOfWay
+        //TODO: Delete numberOfTurn
         /// <param name="symbol">the symbol that is being checked</param>
         /// <returns></returns>
         public bool checkWin(int numberOfTurn, char symbol)

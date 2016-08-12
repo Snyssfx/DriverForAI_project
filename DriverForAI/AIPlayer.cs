@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+   **************************************************************************
+   * Judge for AI ("Connect Five" game).                               	    *
+   *                                                                   	    *
+   * This program should be used for Connect Five Competition.          	  *
+   * Connect Five is the game like Connect Four; for more information see   *
+   * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
+   *                                                                   	    *
+   * Author: Gleb Zakharov                                              	  *
+   * Email: <last name><first name>i@gmail.com                         	    *
+   * Year: 2015                                                        	    *
+   * See the LICENSE.txt file in the project root for more information.     *
+   **************************************************************************
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,20 +25,6 @@ using System.Windows.Forms;
 
 namespace DriverForAI
 {
-    /*
-    **************************************************************************
-    * Judge for AI ("Connect Five" game).                               	 *
-    *                                                                   	 *
-    * This program should be used for Connect Five Competition.          	 *
-    * Connect Five is the game like Connect Four; for more information see   *
-    * http://www.math.spbu.ru/user/chernishev/connectfive/connectfive.html   *
-    *                                                                   	 *
-    * Author: Gleb Zakharov                                              	 *
-    * Email: <last name><first name>i@gmail.com                         	 *
-    * Year: 2015                                                        	 *
-    * See the LICENSE.txt file in the project root for more information.     *
-    **************************************************************************
-   */
     class AIPlayer : IPlayer
     {
         private string name;
